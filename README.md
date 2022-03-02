@@ -7,7 +7,7 @@ This has been deployed to Heroku at the URL: "https://chessyem-websocket.herokua
 This websocket is designed to handle the chat and online multiplayer functionality of the online chess app found at https://hardcore-kepler-5bee6e.netlify.app/
 
 # Prompts
-The socket receives a variety of prompts from the frontend for varying functions
+The socket receives a variety of prompts from the frontend for varying functions:
 ```
 "new message"
 ```
@@ -43,6 +43,7 @@ npm i -g nodemon
 To run the websocket use the command 
 ```
 nodemon chat.js
+```
 
 
 

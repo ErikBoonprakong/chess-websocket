@@ -6,4 +6,6 @@ This has been deployed to Heroku at the URL: "https://chessyem-websocket.herokua
 # To run locally
 To run this locally, you first have to use the commands
 ```npm init --yes
-yarn add express socket.io```
+yarn add express socket.io
+
+erik

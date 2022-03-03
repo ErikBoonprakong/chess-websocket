@@ -15,45 +15,42 @@ const port = process.env.PORT || 4000;
 console.log("starting up.........");
 const cors = require("cors");
 const { uptime } = require("process");
-const clients = [];
+const clients = { bathroom: [], livingRoom: [], lobby: [] };
+let lobby = "lobby";
+let rooms = [[], []];
+let bathroom = [];
 io.on("connection", (socket) => {
-  socket.on("new message", (msg) => {
+  socket.on("enter room", (name, room) => {
+    socket.join(room);
+    console.log(clients);
+    console.log("room: " + room);
+    console.log(room);
+    if (!rooms[room].includes(name)) {
+      rooms[room].push(name);
+    }
+    io.to(room).emit("player list", rooms[room]);
+    if (rooms[room].length === 2) {
+      io.to(room).emit("new message", `${rooms[room][0]} vs ${rooms[room][1]}`);
+    }
+  });
+
+  socket.on("new message", (msg, room) => {
     console.log(msg);
-    io.emit("new message", msg);
+    io.to(room).emit("new message", msg);
   });
-  socket.on("new move", (move) => {
-    io.emit("new move", move);
+
+  socket.on("new move", (move, room) => {
+    io.to(room).emit("new move", move);
   });
-  socket.on("join room", (name) => {
-    if (!clients.includes(name)) {
-      clients.push(name);
-    }
-    io.emit("player list", clients);
-    if (clients.length === 2) {
-      io.emit("new message", `${clients[0]} vs ${clients[1]}`);
-    }
-  });
-  socket.on("leave room", (name) => {
-    clients.splice(clients.indexOf(name), 1);
-    io.emit("player list", clients);
+
+  socket.on("leave room", (name, room) => {
+    lobby = room;
+    // if (!clients.rooms.includes(room)) {
+    //   clients.rooms.push(room);
+    // }
+    rooms[room].splice(rooms[room].indexOf(name), 1);
+    io.to(room).emit("player list", rooms[room]);
   });
 });
 
 server.listen(port, () => console.log("server is listening on port: " + port));
-
-// onDrop(sourceSquare, targetSquare) {
-//     console.log(this.state.game);
-//     const newGame = new Chess(this.state.game);
-//     const gameCopy = { ...newGame };
-//     const move = gameCopy.move({
-//       from: sourceSquare,
-//       to: targetSquare,
-//       promotion: "q", // always promote to a queen for example simplicity
-//     });
-//     if (move === null) return false;
-//     const newGameFen = gameCopy.fen();
-//     this.socket.emit("new move", { move: move, game: newGameFen });
-//     this.setState({ game: "" });
-
-//     return move;
-//   }

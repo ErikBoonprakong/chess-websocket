@@ -22,6 +22,7 @@ let bathroom = [];
 io.on("connection", (socket) => {
   socket.on("join lobby", (username) => {
     socket.join("lobby");
+    socket.to("lobby").emit("room list", rooms);
   });
 
   socket.on("enter room", (name, room) => {

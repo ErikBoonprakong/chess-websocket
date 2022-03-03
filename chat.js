@@ -20,11 +20,12 @@ let lobby = "lobby";
 let rooms = [[], []];
 let bathroom = [];
 io.on("connection", (socket) => {
+  socket.on("join lobby", (username) => {
+    socket.join("lobby");
+  });
+
   socket.on("enter room", (name, room) => {
     socket.join(room);
-    console.log(clients);
-    console.log("room: " + room);
-    console.log(room);
     if (!rooms[room].includes(name)) {
       rooms[room].push(name);
     }
@@ -32,6 +33,7 @@ io.on("connection", (socket) => {
     if (rooms[room].length === 2) {
       io.to(room).emit("new message", `${rooms[room][0]} vs ${rooms[room][1]}`);
     }
+    io.to("lobby").emit("room list", rooms);
   });
 
   socket.on("new message", (msg, room) => {

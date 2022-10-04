@@ -1,5 +1,5 @@
 # chess-websocket
-Socket.io websocket connection for multiplayer chess app
+Socket.io websocket connection for multiplayer chess app.
 
 This has been deployed to Heroku at the URL: "https://chessyem-websocket.herokuapp.com"
 
